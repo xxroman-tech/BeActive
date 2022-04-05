@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/loginFragment2">
+    <fragment
+        android:id="@+id/test"
+        android:name="com.romanlojko.beactive.Test"
+        android:label="fragment_test"
+        tools:layout="@layout/fragment_test" />
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.romanlojko.beactive.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment2_to_test"
+            app:destination="@id/test" />
+        <action
+            android:id="@+id/action_loginFragment2_to_mainApplication"
+            app:destination="@id/mainApplication" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainApplication"
+        android:name="com.romanlojko.beactive.MainApplication"
+        android:label="fragment_main_application"
+        tools:layout="@layout/fragment_main_application" />
+</navigation>
