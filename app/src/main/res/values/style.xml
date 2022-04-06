@@ -8,10 +8,8 @@
         <item name="android:textSize">15sp</item>
     </style>
     <style name="MyButtonStyle" parent="android:Widget.Button">
-        <item name="android:background">@color/button</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.Button.Rounded</item>
     </style>
 
 
