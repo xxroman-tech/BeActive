@@ -33,7 +33,7 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
         binding.loginButton.setOnClickListener { view : View ->
-            view.findNavController().navigate(R.id.action_loginFragment2_to_test)
+            view.findNavController().navigate(R.id.action_loginFragment2_to_mainApplication)
         }
 
 

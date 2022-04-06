@@ -5,18 +5,10 @@
     android:id="@+id/navigation"
     app:startDestination="@id/loginFragment2">
     <fragment
-        android:id="@+id/test"
-        android:name="com.romanlojko.beactive.Test"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
-    <fragment
         android:id="@+id/loginFragment2"
         android:name="com.romanlojko.beactive.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment2_to_test"
-            app:destination="@id/test" />
         <action
             android:id="@+id/action_loginFragment2_to_mainApplication"
             app:destination="@id/mainApplication" />

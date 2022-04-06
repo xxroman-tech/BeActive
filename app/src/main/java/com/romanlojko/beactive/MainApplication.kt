@@ -1,10 +1,14 @@
 package com.romanlojko.beactive
 
 import android.os.Bundle
+import android.text.style.TtsSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.romanlojko.beactive.databinding.FragmentLoginBinding
+import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,12 +22,16 @@ private const val ARG_PARAM2 = "param2"
  */
 class MainApplication : Fragment() {
 
+    lateinit var binding: FragmentMainApplicationBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_application, container, false)
+
+        binding = FragmentMainApplicationBinding.inflate(layoutInflater)
+
+        return binding.root
     }
 
 }
