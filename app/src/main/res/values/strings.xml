@@ -8,5 +8,6 @@
     <string name="editTextEmail">E-mail</string>
     <string name="editTextPassword">Heslo</string>
     <string name="editTextPasswordOpakovane">Zopakovať heslo</string>
-    <string name="textViewRegistrovanie">Nemáte účet ?</string>
+    <string name="textViewRegistrovanie"><u>Nemáte účet ?</u></string>
+    <string name="textViewVytvoritUcet">Vytvoriť účet</string>
 </resources>

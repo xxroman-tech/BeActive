@@ -36,6 +36,9 @@ class LoginFragment : Fragment() {
             view.findNavController().navigate(R.id.action_loginFragment2_to_mainApplication)
         }
 
+        binding.registerLink.setOnClickListener { view : View ->
+            view.findNavController().navigate(R.id.action_loginFragment2_to_registerFragment)
+        }
 
         return binding.root
     }

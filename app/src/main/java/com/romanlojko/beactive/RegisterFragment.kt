@@ -31,6 +31,8 @@ class RegisterFragment : Fragment() {
         binding.registerButton.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_registerFragment_to_mainApplication)
         }
+
+        return binding.root;
     }
 
 }
