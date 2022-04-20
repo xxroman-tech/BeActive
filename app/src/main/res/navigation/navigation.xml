@@ -12,10 +12,31 @@
         <action
             android:id="@+id/action_loginFragment2_to_mainApplication"
             app:destination="@id/mainApplication" />
+        <action
+            android:id="@+id/action_loginFragment2_to_registerFragment"
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainApplication"
         android:name="com.romanlojko.beactive.MainApplication"
         android:label="fragment_main_application"
-        tools:layout="@layout/fragment_main_application" />
+        tools:layout="@layout/fragment_main_application" >
+        <action
+            android:id="@+id/action_mainApplication_to_activityCounter"
+            app:destination="@id/activityCounter" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityCounter"
+        android:name="com.romanlojko.beactive.activityCounter"
+        android:label="fragment_activity_counter"
+        tools:layout="@layout/fragment_activity_counter" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.romanlojko.beactive.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_mainApplication"
+            app:destination="@id/mainApplication" />
+    </fragment>
 </navigation>
