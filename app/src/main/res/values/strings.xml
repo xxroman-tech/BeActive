@@ -2,7 +2,7 @@
     <string name="app_name">BeActive</string>
     <string name="logo_Text">Be Active</string>
 
-<!--    Register a login -->
+    <!--    Register a login -->
     <string name="registerButton">Zaregistrovať</string>
     <string name="loginButton">Prihlásiť sa</string>
     <string name="editTextEmail">E-mail</string>
@@ -10,4 +10,6 @@
     <string name="editTextPasswordOpakovane">Zopakovať heslo</string>
     <string name="textViewRegistrovanie"><u>Nemáte účet ?</u></string>
     <string name="textViewVytvoritUcet">Vytvoriť účet</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

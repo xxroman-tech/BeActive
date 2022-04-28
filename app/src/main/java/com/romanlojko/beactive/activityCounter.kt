@@ -1,59 +1,123 @@
 package com.romanlojko.beactive
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [activityCounter.newInstance] factory method to
- * create an instance of this fragment.
- */
 class activityCounter : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    // Enum pre tlacidla
+    enum class TimerState{
+        Stopped, Paused, Running
     }
+
+    lateinit var binding: FragmentActivityCounterBinding
+
+    private lateinit var timer: CountDownTimer
+    private var timerState = TimerState.Stopped
+
+    private var timerLengthSeconds: Long = 0
+    private var secondsRemaining: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_activity_counter, container, false)
+        binding = FragmentActivityCounterBinding.inflate(layoutInflater)
+
+        binding.flaotActionButtonPlay.setOnClickListener { view: View ->
+            startTimer()
+            timerState = TimerState.Running
+            updateButtons()
+        }
+
+        binding.flaotActionButtonPause.setOnClickListener { view: View ->
+            timer.cancel()
+            timerState = TimerState.Stopped
+            updateButtons()
+        }
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment activityCounter.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            activityCounter().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onResume() {
+        super.onResume()
+
+        initTimer()
+
+        //TODO: remove background timer, hide notification
     }
+
+    override fun onPause() {
+        super.onPause()
+
+        timer.cancel()
+
+//        if (timerState == TimerState.Running){
+//            timer.cancel()
+//            //TODO: start background timer and show notification
+//        }
+//        else if (timerState == TimerState.Paused){
+//            //TODO: show notification
+//        }
+    }
+
+    fun initTimer() {
+        setNewTimerLength()
+
+        secondsRemaining = timerLengthSeconds
+        updateButtons()
+        updateCountdownUI()
+    }
+
+    private fun setNewTimerLength(){
+        timerLengthSeconds = (10 * 60L)
+        binding.progressCasovac.max = timerLengthSeconds.toInt()
+    }
+
+    private fun startTimer() {
+        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+            override fun onFinish() = onTimerFinished()
+
+            override fun onTick(millisUntilFinished: Long) {
+                secondsRemaining = millisUntilFinished / 1000
+                updateCountdownUI()
+            }
+        }.start()
+    }
+
+    private fun onTimerFinished() {
+        secondsRemaining = timerLengthSeconds
+
+        binding.progressCasovac.progress = 0
+
+        updateButtons()
+        updateCountdownUI()
+    }
+
+    private fun updateCountdownUI(){
+        val minutesUntilFinished = secondsRemaining / 60
+        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
+        val secondsStr = secondsInMinuteUntilFinished.toString()
+        binding.textViewCasovac.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+        binding.progressCasovac.progress = (timerLengthSeconds - secondsRemaining).toInt()
+    }
+
+    private fun updateButtons() {
+        when (timerState) {
+            TimerState.Running ->{
+                binding.flaotActionButtonPlay.isEnabled = false
+                binding.flaotActionButtonPause.isEnabled = true
+            }
+            TimerState.Stopped -> {
+                binding.flaotActionButtonPlay.isEnabled = true
+                binding.flaotActionButtonPause.isEnabled = false
+            }
+        }
+    }
+
 }

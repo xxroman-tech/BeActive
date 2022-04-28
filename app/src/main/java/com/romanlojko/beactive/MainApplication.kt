@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import com.romanlojko.beactive.databinding.FragmentLoginBinding
 import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
 import java.util.*
@@ -30,6 +31,10 @@ class MainApplication : Fragment() {
     ): View? {
 
         binding = FragmentMainApplicationBinding.inflate(layoutInflater)
+
+        binding.buttonAddActivity.setOnClickListener{view : View ->
+            view.findNavController().navigate(R.id.action_mainApplication_to_activityCounter)
+        }
 
         return binding.root
     }
