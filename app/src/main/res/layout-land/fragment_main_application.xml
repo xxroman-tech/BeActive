@@ -15,34 +15,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="horizontal">
 
-            <CalendarView
-                android:id="@+id/CalendarView"
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@color/background"
-                android:dateTextAppearance="@style/CalenderViewDateCustomText"
-                android:theme="@style/CalenderViewCustom"
-                android:weekDayTextAppearance="@style/CalenderViewDateCustomText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+
+                    <CalendarView
+                        android:id="@+id/CalendarView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/background"
+                        android:dateTextAppearance="@style/CalenderViewDateCustomText"
+                        android:theme="@style/CalenderViewCustom"
+                        android:weekDayTextAppearance="@style/CalenderViewDateCustomText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activityZoznam"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -52,10 +56,9 @@
         android:id="@+id/button_add_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="bottom|end"
         android:layout_margin="36dp"
         android:src="@drawable/outline_add_white_24dp"
         app:backgroundTint="@color/button"
-        app:layout_anchorGravity="bottom|right|end"
-        tools:ignore="MissingConstraints"/>
+        tools:ignore="MissingConstraints" />
 </FrameLayout>
