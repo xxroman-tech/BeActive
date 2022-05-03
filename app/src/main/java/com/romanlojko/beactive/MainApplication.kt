@@ -7,23 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.romanlojko.beactive.databinding.FragmentLoginBinding
 import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
 import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MainApplication.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MainApplication : Fragment() {
 
     lateinit var binding: FragmentMainApplicationBinding
+
+    lateinit var myAuthorization: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,11 +25,22 @@ class MainApplication : Fragment() {
 
         binding = FragmentMainApplicationBinding.inflate(layoutInflater)
 
+        myAuthorization = FirebaseAuth.getInstance()
+
         binding.buttonAddActivity.setOnClickListener{view : View ->
             view.findNavController().navigate(R.id.action_mainApplication_to_activityCounter)
         }
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val user = myAuthorization.currentUser
+        if (user == null) {
+            view?.findNavController()?.navigate(R.id.action_mainApplication_to_loginFragment2)
+        }
     }
 
 }

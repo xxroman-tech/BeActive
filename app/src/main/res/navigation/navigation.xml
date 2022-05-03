@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/loginFragment2">
+    app:startDestination="@id/mainApplication">
     <fragment
         android:id="@+id/loginFragment2"
         android:name="com.romanlojko.beactive.LoginFragment"
@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_mainApplication_to_activityCounter"
             app:destination="@id/activityCounter" />
+        <action
+            android:id="@+id/action_mainApplication_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
     </fragment>
     <fragment
         android:id="@+id/activityCounter"

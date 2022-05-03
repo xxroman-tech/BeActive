@@ -1,11 +1,17 @@
 package com.romanlojko.beactive
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 
 class activityCounter : Fragment() {
@@ -39,6 +45,10 @@ class activityCounter : Fragment() {
             timer.cancel()
             timerState = TimerState.Stopped
             updateButtons()
+        }
+
+        binding.flaotActionButtonClose.setOnClickListener{ view: View ->
+            StopActivityDialog().show(childFragmentManager, StopActivityDialog.TAG)
         }
 
         return binding.root
@@ -120,4 +130,29 @@ class activityCounter : Fragment() {
         }
     }
 
+    class StopActivityDialog : DialogFragment() {
+
+        override fun onCreateDialog(@Nullable savedInstanceState: Bundle?): Dialog {
+            return activity?.let {
+                // Use the Builder class for convenient dialog construction
+                val builder = AlertDialog.Builder(it)
+                builder.setMessage(R.string.wantCloseActivityCounter)
+                    .setPositiveButton(R.string.answearYes,
+                        DialogInterface.OnClickListener { dialog, id ->
+                        })
+                    .setNegativeButton(R.string.answearNo,
+                        DialogInterface.OnClickListener { dialog, id ->
+                        })
+                // Create the AlertDialog object and return it
+                builder.create()
+            } ?: throw IllegalStateException("Activity cannot be null")
+        }
+
+        companion object {
+            const val TAG = "StopActivityDialog"
+        }
+
+    }
+
 }
+

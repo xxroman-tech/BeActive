@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1088597569843",
+    "project_id": "vamzapp-5939a",
+    "storage_bucket": "vamzapp-5939a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088597569843:android:02f18fed24a861054a4e46",
+        "android_client_info": {
+          "package_name": "com.romanlojko.beactive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088597569843-ej4pjh2gl1d1fef2u1pue6q4utibm6ca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.romanlojko.beactive",
+            "certificate_hash": "2ab4461eaedcf99c5dd9fe91a0b41531ed507237"
+          }
+        },
+        {
+          "client_id": "1088597569843-0v0111m483jmfvulq09ismnlcq95tqn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPPwtRbVYx5duFdymR1f_Mq-Ojiy4z1zQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088597569843-0v0111m483jmfvulq09ismnlcq95tqn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -39,7 +39,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/username_input"
+                    android:id="@+id/mail_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:background="@drawable/rounded_edit_text"/>
 
                 <EditText
-                    android:id="@+id/password_input_Opakovane"
+                    android:id="@+id/password_input_check"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -74,6 +74,16 @@
                         android:src="@android:drawable/ic_media_pause"
                         app:backgroundTint="@color/button"/>
 
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/flaotActionButton_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="16dp"
+                        android:clickable="true"
+                        android:src="@drawable/ic_baseline_stop_24"
+                        app:backgroundTint="@color/button"/>
+
                 </LinearLayout>
 
                 <LinearLayout
