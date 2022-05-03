@@ -17,4 +17,7 @@
     <string name="wantCloseActivityCounter">Chcete ukončiť meranie activity?</string>
     <string name="answearYes">Áno</string>
     <string name="answearNo">Nie</string>
+
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>

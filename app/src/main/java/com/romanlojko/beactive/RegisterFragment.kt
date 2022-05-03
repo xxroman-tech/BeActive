@@ -18,13 +18,13 @@ import com.romanlojko.beactive.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment() {
 
-    lateinit var binding: FragmentRegisterBinding
+    private lateinit var binding: FragmentRegisterBinding
 
-    lateinit var mailEditText : EditText
-    lateinit var passwordEditText : EditText
-    lateinit var passwordCheckEditText : EditText
+    private lateinit var mailEditText : EditText
+    private lateinit var passwordEditText : EditText
+    private lateinit var passwordCheckEditText : EditText
 
-    lateinit var myAuthorization: FirebaseAuth
+    private lateinit var myAuthorization: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

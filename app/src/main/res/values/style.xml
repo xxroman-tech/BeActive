@@ -28,4 +28,11 @@
         <item name="android:weekNumberColor">@color/background</item>
         <item name="android:headerYearTextAppearance">@color/white</item>
     </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="popUpOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="menuTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>
