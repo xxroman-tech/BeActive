@@ -2,19 +2,16 @@ package com.romanlojko.beactive
 
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.romanlojko.beactive.databinding.ActivityMainBinding
 import com.romanlojko.beactive.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -33,6 +30,8 @@ class LoginFragment : Fragment() {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
+        (activity as DrawerLocker?)!!.setDrawerLocked(true)
+
         mailEditText = binding.mailInput!!
         passwordEditText = binding.passwordInput!!
 
@@ -47,6 +46,11 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as DrawerLocker?)!!.setDrawerLocked(false)
     }
 
     private fun loginUser() {

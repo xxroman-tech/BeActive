@@ -8,12 +8,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+interface DrawerLocker{
+    fun setDrawerLocked(shouldLock: Boolean)
+}
+
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener , DrawerLocker{
 
     private lateinit var toolbar: Toolbar
     private lateinit var mDrawer: DrawerLayout
     private lateinit var navigationView: NavigationView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun setDrawerLocked(enabled: Boolean) {
+        if (enabled) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        } else {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        }
     }
 
 }

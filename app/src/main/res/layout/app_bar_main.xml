@@ -18,7 +18,7 @@
             android:id="@+id/toolBar"
             android:popupTheme="@style/popUpOverlay"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:layout_height="60dp">
+            android:layout_height="0dp">
 
         </androidx.appcompat.widget.Toolbar>
 

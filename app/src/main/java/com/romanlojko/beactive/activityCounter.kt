@@ -23,7 +23,7 @@ class activityCounter : Fragment() {
 
     lateinit var binding: FragmentActivityCounterBinding
 
-    private lateinit var timer: CountDownTimer
+    private var timer: CountDownTimer? = null
     private var timerState = TimerState.Stopped
 
     private var timerLengthSeconds: Long = 0
@@ -35,6 +35,8 @@ class activityCounter : Fragment() {
     ): View? {
         binding = FragmentActivityCounterBinding.inflate(layoutInflater)
 
+        (activity as DrawerLocker?)!!.setDrawerLocked(true)
+
         binding.flaotActionButtonPlay.setOnClickListener { view: View ->
             startTimer()
             timerState = TimerState.Running
@@ -42,7 +44,7 @@ class activityCounter : Fragment() {
         }
 
         binding.flaotActionButtonPause.setOnClickListener { view: View ->
-            timer.cancel()
+            timer?.cancel()
             timerState = TimerState.Stopped
             updateButtons()
         }
@@ -65,7 +67,9 @@ class activityCounter : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        timer.cancel()
+        (activity as DrawerLocker?)!!.setDrawerLocked(false)
+
+        timer?.cancel()
 
 //        if (timerState == TimerState.Running){
 //            timer.cancel()
