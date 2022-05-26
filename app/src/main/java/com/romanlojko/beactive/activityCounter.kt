@@ -35,8 +35,6 @@ class activityCounter : Fragment() {
     ): View? {
         binding = FragmentActivityCounterBinding.inflate(layoutInflater)
 
-        (activity as DrawerLocker?)!!.setDrawerLocked(true)
-
         binding.flaotActionButtonPlay.setOnClickListener { view: View ->
             startTimer()
             timerState = TimerState.Running
@@ -66,8 +64,6 @@ class activityCounter : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
-        (activity as DrawerLocker?)!!.setDrawerLocked(false)
 
         timer?.cancel()
 

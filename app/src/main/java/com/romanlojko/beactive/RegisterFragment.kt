@@ -32,8 +32,6 @@ class RegisterFragment : Fragment() {
     ): View? {
         binding = FragmentRegisterBinding.inflate(layoutInflater)
 
-        (activity as DrawerLocker?)!!.setDrawerLocked(true)
-
         mailEditText = binding.mailInput!!
         passwordEditText = binding.passwordInput!!
         passwordCheckEditText = binding.passwordInputCheck!!
@@ -45,11 +43,6 @@ class RegisterFragment : Fragment() {
         }
 
         return binding.root;
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as DrawerLocker?)!!.setDrawerLocked(false)
     }
 
     private fun createUser() {

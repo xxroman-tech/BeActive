@@ -30,8 +30,6 @@ class LoginFragment : Fragment() {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
-        (activity as DrawerLocker?)!!.setDrawerLocked(true)
-
         mailEditText = binding.mailInput!!
         passwordEditText = binding.passwordInput!!
 
@@ -46,11 +44,6 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as DrawerLocker?)!!.setDrawerLocked(false)
     }
 
     private fun loginUser() {
