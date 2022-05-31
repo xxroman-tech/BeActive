@@ -23,7 +23,6 @@ import java.util.*
 class MainApplication : Fragment() {
 
     lateinit var binding: FragmentMainApplicationBinding
-
     lateinit var myAuthorization: FirebaseAuth
 
     override fun onCreateView(

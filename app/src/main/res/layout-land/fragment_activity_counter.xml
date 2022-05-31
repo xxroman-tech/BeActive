@@ -8,8 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="36dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -23,7 +22,8 @@
 
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/textView_casovac"
@@ -87,7 +87,7 @@
                             android:layout_margin="16dp"
                             android:clickable="true"
                             android:src="@drawable/ic_baseline_stop_24"
-                            app:backgroundTint="@color/button"/>
+                            app:backgroundTint="@color/button" />
 
                     </LinearLayout>
 

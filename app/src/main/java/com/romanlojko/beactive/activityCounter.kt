@@ -1,6 +1,7 @@
 package com.romanlojko.beactive
 
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -11,8 +12,12 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
+import kotlinx.coroutines.flow.callbackFlow
+import java.util.*
+import kotlin.math.min
 
 class activityCounter : Fragment() {
 
@@ -26,8 +31,10 @@ class activityCounter : Fragment() {
     private var timer: CountDownTimer? = null
     private var timerState = TimerState.Stopped
 
-    private var timerLengthSeconds: Long = 0
+    private var timerLengthSeconds: Long = (10 * 60L)
     private var secondsRemaining: Long = 0
+    // uchovanie pociatocneho casu na zaciatku aktivity
+    private var firstTime: Long = timerLengthSeconds
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,9 +71,6 @@ class activityCounter : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
-        timer?.cancel()
-
 //        if (timerState == TimerState.Running){
 //            timer.cancel()
 //            //TODO: start background timer and show notification
@@ -78,14 +82,12 @@ class activityCounter : Fragment() {
 
     fun initTimer() {
         setNewTimerLength()
-
         secondsRemaining = timerLengthSeconds
         updateButtons()
         updateCountdownUI()
     }
 
     private fun setNewTimerLength(){
-        timerLengthSeconds = (10 * 60L)
         binding.progressCasovac.max = timerLengthSeconds.toInt()
     }
 
@@ -114,7 +116,7 @@ class activityCounter : Fragment() {
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
         binding.textViewCasovac.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
-        binding.progressCasovac.progress = (timerLengthSeconds - secondsRemaining).toInt()
+        binding.progressCasovac.progress = (firstTime - secondsRemaining).toInt()
     }
 
     private fun updateButtons() {
@@ -139,6 +141,7 @@ class activityCounter : Fragment() {
                 builder.setMessage(R.string.wantCloseActivityCounter)
                     .setPositiveButton(R.string.answearYes,
                         DialogInterface.OnClickListener { dialog, id ->
+                            activity?.onBackPressed()
                         })
                     .setNegativeButton(R.string.answearNo,
                         DialogInterface.OnClickListener { dialog, id ->
@@ -150,6 +153,31 @@ class activityCounter : Fragment() {
 
         companion object {
             const val TAG = "StopActivityDialog"
+        }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong("secondsLeft", secondsRemaining)
+        if (timerState == TimerState.Running)
+            outState.putBoolean("timerRunning", true)
+        else
+            outState.putBoolean("timerRunning", false)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            secondsRemaining = savedInstanceState.getLong("secondsLeft")
+            if (savedInstanceState.getBoolean("timerRunning")) {
+                timerState = TimerState.Running
+                startTimer()
+            }
+            else {
+                timerState = TimerState.Stopped
+                timerLengthSeconds = savedInstanceState.getLong("secondsLeft")
+            }
         }
 
     }
