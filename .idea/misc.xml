@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout-land/fragment_login.xml" value="0.30511463844797176" />
         <entry key="app/src/main/res/layout-land/fragment_main_application.xml" value="0.30511463844797176" />
         <entry key="app/src/main/res/layout-land/fragment_register.xml" value="0.30511463844797176" />
+        <entry key="app/src/main/res/layout/activity_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3211050724637681" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.26766304347826086" />
