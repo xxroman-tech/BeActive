@@ -3,8 +3,6 @@ package com.romanlojko.beactive
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
-import android.util.Log.INFO
-import android.util.Log.WARN
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.romanlojko.beactive.Objects.DataHolder
+import com.romanlojko.beactive.Objects.UserActivity
 import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_activity_counter.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Level
-import java.util.logging.Level.INFO
 import kotlin.collections.ArrayList
 
 class MainApplication : Fragment() {
@@ -50,7 +46,9 @@ class MainApplication : Fragment() {
         activityList = arrayListOf<UserActivity>()
 
         binding.buttonAddActivity.setOnClickListener{view : View ->
-            view.findNavController().navigate(R.id.action_mainApplication_to_activityCounter)
+            // pridanie date do DataHolder triedy
+            DataHolder.setDate(date)
+            view.findNavController().navigate(R.id.action_mainApplication_to_timePickerDialog2)
         }
 
         binding.CalendarView.setOnDateChangeListener(CalendarView.OnDateChangeListener {

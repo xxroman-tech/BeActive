@@ -1,4 +1,4 @@
-package com.romanlojko.beactive
+package com.romanlojko.beactive.Objects
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

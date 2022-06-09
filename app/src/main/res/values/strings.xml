@@ -20,4 +20,7 @@
 
     <string name="open">open</string>
     <string name="close">close</string>
+
+    <string name="time_picker_text">Dĺžka aktivity</string>
+    <string name="time_picker_button_dalej">Pokračovať</string>
 </resources>

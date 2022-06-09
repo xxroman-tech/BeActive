@@ -1,7 +1,6 @@
 package com.romanlojko.beactive
 
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -12,12 +11,8 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
-import kotlinx.coroutines.flow.callbackFlow
-import java.util.*
-import kotlin.math.min
+import com.romanlojko.beactive.Objects.DataHolder
 
 class activityCounter : Fragment() {
 
@@ -31,7 +26,7 @@ class activityCounter : Fragment() {
     private var timer: CountDownTimer? = null
     private var timerState = TimerState.Stopped
 
-    private var timerLengthSeconds: Long = (10 * 60L)
+    private var timerLengthSeconds: Long = DataHolder.getTimeOfActivity() * 60L
     private var secondsRemaining: Long = 0
     // uchovanie pociatocneho casu na zaciatku aktivity
     private var firstTime: Long = timerLengthSeconds

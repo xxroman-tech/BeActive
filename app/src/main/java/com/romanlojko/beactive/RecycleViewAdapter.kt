@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
+import com.romanlojko.beactive.Objects.UserActivity
 
 class RecycleViewAdapter(private val activityList: ArrayList<UserActivity>):
     RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>() {

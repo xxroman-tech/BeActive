@@ -1,7 +1,6 @@
-package com.romanlojko.beactive
+package com.romanlojko.beactive.Objects
 
-class UserActivity {
-
+object DataHolder {
     private var date: String = ""
     private var caloriesBurned: Int = 0
     private var timeOfActivity: Int = 0
