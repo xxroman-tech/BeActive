@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_mainApplication_to_timePickerDialog2"
             app:destination="@id/timePickerDialog2" />
+        <action
+            android:id="@+id/action_mainApplication_to_profile"
+            app:destination="@id/profile" />
     </fragment>
     <fragment
         android:id="@+id/activityCounter"
@@ -50,4 +53,12 @@
             android:id="@+id/action_timePickerDialog2_to_activityCounter"
             app:destination="@id/activityCounter" />
     </dialog>
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.romanlojko.beactive.Profile"
+        android:label="Profile" >
+        <action
+            android:id="@+id/action_profile_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
+    </fragment>
 </navigation>

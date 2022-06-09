@@ -4,7 +4,7 @@ buildscript {
     ext {
         kotlin_version = '1.4.10'
         archLifecycleVersion = '1.1.1'
-        gradleVersion = '4.1.0'
+        gradleVersion = '7.2.1'
         supportlibVersion = '1.2.0'
         dataBindingCompilerVersion = gradleVersion // Always need to be the same.
         navigationVersion = "2.3.0"
@@ -25,9 +25,9 @@ buildscript {
     }
 }
 plugins {
-    id 'com.android.application' version '7.1.2' apply false
-    id 'com.android.library' version '7.1.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    id 'com.android.application' version '7.2.1' apply false
+    id 'com.android.library' version '7.2.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
 }
 
 task clean(type: Delete) {

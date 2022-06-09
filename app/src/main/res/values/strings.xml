@@ -23,4 +23,13 @@
 
     <string name="time_picker_text">Dĺžka aktivity</string>
     <string name="time_picker_button_dalej">Pokračovať</string>
+
+    <!--  Fragment profile  -->
+    <string name="profile_weight_text">Váha</string>
+    <string name="profile_weight_jednotky">kg</string>
+    <string name="profile_height_text">Výška</string>
+    <string name="profile_height_jednotky">cm</string>
+    <string name="progile_pohlavie_text">Pohlavie</string>
+    <string name="profile_button_save">Uložiť</string>
+    <string name="profile_button_logOut">Odhlásiť</string>
 </resources>

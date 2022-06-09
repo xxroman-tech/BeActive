@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.CalendarView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.google.firebase.database.*
 import com.romanlojko.beactive.Objects.DataHolder
 import com.romanlojko.beactive.Objects.UserActivity
 import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
+import kotlinx.android.synthetic.main.fragment_main_application.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,6 +30,14 @@ class MainApplication : Fragment() {
     private lateinit var dbRef: DatabaseReference
     private lateinit var activitiesRecycleView: RecyclerView
     private lateinit var activityList: ArrayList<UserActivity>
+
+    // Nacitanie animacii pre menu
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_open_anim) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.rotate_close_anim) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.from_bottom_anim) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this.context, R.anim.to_bottom_anim) }
+
+    private var clickedMenuButton = false
 
     private var date: String = ""
 
@@ -48,10 +59,20 @@ class MainApplication : Fragment() {
         binding.buttonAddActivity.setOnClickListener{view : View ->
             // pridanie date do DataHolder triedy
             DataHolder.setDate(date)
+            onMenuButtonClick()
             view.findNavController().navigate(R.id.action_mainApplication_to_timePickerDialog2)
         }
 
-        binding.CalendarView.setOnDateChangeListener(CalendarView.OnDateChangeListener {
+        binding.buttonProfile!!.setOnClickListener{view : View ->
+            onMenuButtonClick()
+            view.findNavController().navigate(R.id.action_mainApplication_to_profile)
+        }
+
+        binding.buttonMenu!!.setOnClickListener{
+            onMenuButtonClick()
+        }
+
+        binding.CalendarView.setOnDateChangeListener{
                 calendarView, year, month , dayOfMonth ->
 
             activityList.clear()
@@ -61,12 +82,46 @@ class MainApplication : Fragment() {
             date = (dayOfMonth.toString() + "-" +
                     (month + 1) + "-" + year)
             getUserData()
-        })
+        }
 
         getDateFromCalendarView()
         getUserData()
 
         return binding.root
+    }
+
+    /**
+     * Metoda ktora handluje menu button click
+     */
+    private fun onMenuButtonClick() {
+        setVisibility(clickedMenuButton)
+        setAnimation(clickedMenuButton)
+        clickedMenuButton = !clickedMenuButton //if (!clickedMenuButton) clickedMenuButton = true else clickedMenuButton = false - skratene
+    }
+
+    private fun setAnimation(clicked: Boolean) {
+        if (!clicked) {
+            button_add_activity.startAnimation(fromBottom)
+            button_profile.startAnimation(fromBottom)
+            button_Menu.startAnimation(rotateOpen)
+        } else {
+            button_add_activity.startAnimation(toBottom)
+            button_profile.startAnimation(toBottom)
+            button_Menu.startAnimation(rotateClose)
+        }
+    }
+
+    /**
+     * Metoda ktora schovava a odokryva buttony v menu
+     */
+    private fun setVisibility(clicked: Boolean) {
+        if(!clicked) {
+            button_add_activity.visibility = View.VISIBLE
+            button_profile.visibility = View.VISIBLE
+        } else {
+            button_add_activity.visibility = View.INVISIBLE
+            button_profile.visibility = View.INVISIBLE
+        }
     }
 
     private fun getUserData() {
