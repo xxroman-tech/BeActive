@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.romanlojko.beactive.Objects.DataHolder
+import com.romanlojko.beactive.Objects.PersonDataLoader
 import com.romanlojko.beactive.Objects.UserActivity
 import com.romanlojko.beactive.databinding.FragmentMainApplicationBinding
 import kotlinx.android.synthetic.main.fragment_main_application.*
@@ -40,6 +41,12 @@ class MainApplication : Fragment() {
     private var clickedMenuButton = false
 
     private var date: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        PersonDataLoader.loadDataToPerson()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

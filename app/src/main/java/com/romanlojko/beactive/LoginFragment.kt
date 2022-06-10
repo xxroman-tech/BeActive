@@ -1,7 +1,9 @@
 package com.romanlojko.beactive
 
+import android.content.ContentValues
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +14,20 @@ import androidx.navigation.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.romanlojko.beactive.Objects.Person
+import com.romanlojko.beactive.Objects.PersonDataLoader
+import com.romanlojko.beactive.Objects.UserActivity
 import com.romanlojko.beactive.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
 
-    lateinit var binding: FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding
 
-    lateinit var mailEditText : EditText
-    lateinit var passwordEditText : EditText
+    private lateinit var mailEditText : EditText
+    private lateinit var passwordEditText : EditText
 
-    lateinit var myAuthorization: FirebaseAuth
+    private lateinit var myAuthorization: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +72,8 @@ class LoginFragment : Fragment() {
                         "Prihlásenie úspešné",
                         Toast.LENGTH_SHORT
                     ).show()
+                    // TODO: Ak je prvy krat registrovany
+//                    PersonDataLoader.loadDataToPerson()
                     view?.findNavController()?.navigate(R.id.action_loginFragment2_to_mainApplication)
                 } else {
                     Toast.makeText(

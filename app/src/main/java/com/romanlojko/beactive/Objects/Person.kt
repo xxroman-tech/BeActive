@@ -5,25 +5,11 @@ import com.google.firebase.auth.FirebaseUser
 
 object Person {
 
-    private var myAuthorization: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private lateinit var userId: FirebaseUser
-    private lateinit var name: String
-    private lateinit var surname: String
+    private var name: String = ""
+    private var surname: String = ""
     private var height: Double = 0.0
     private var weight: Double = 0.0
-    private lateinit var sex: Sex
-    private lateinit var listOfActivities: ArrayList<UserActivity>
-
-    init {
-        if (myAuthorization.currentUser != null) {
-            userId = myAuthorization.currentUser!!
-        }
-    }
-
-    fun getActivites(): ArrayList<UserActivity> {
-        return listOfActivities
-    }
+    private var sex: String = ""
 
     fun getName(): String {
         return name
@@ -41,7 +27,7 @@ object Person {
         return weight
     }
 
-    fun getSex(): Sex {
+    fun getSex(): String {
         return sex
     }
 
@@ -61,7 +47,12 @@ object Person {
         weight = pWeight
     }
 
-    fun setSex(pSex: Sex) {
+    fun setSex(pSex: String) {
+//        if (pSex.equals("male")) {
+//            sex = Sex.MALE
+//        } else if (pSex.equals("female")) {
+//            sex = Sex.FEMALE
+//        }
         sex = pSex
     }
 }
