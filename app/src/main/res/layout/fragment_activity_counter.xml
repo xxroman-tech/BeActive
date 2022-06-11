@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="64dp"
-                    android:text="00:00"
+                    android:text=""
                     android:textSize="70sp" />
 
                 <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -40,7 +40,7 @@
                     android:layout_width="350dp"
                     android:layout_height="350dp"
                     android:layout_gravity="center"
-                    android:progressTint="@color/background"/>
+                    android:progressTint="@color/button"/>
             </FrameLayout>
 
             <LinearLayout
@@ -64,15 +64,15 @@
                         android:src="@android:drawable/ic_media_play"
                         app:backgroundTint="@color/button"/>
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/flaotActionButton_pause"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="16dp"
-                        android:clickable="true"
-                        android:src="@android:drawable/ic_media_pause"
-                        app:backgroundTint="@color/button"/>
+<!--                    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                        android:id="@+id/flaotActionButton_pause"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="bottom"-->
+<!--                        android:layout_margin="16dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:src="@android:drawable/ic_media_pause"-->
+<!--                        app:backgroundTint="@color/button"/>-->
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/flaotActionButton_close"
@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:text="0000"
+                        android:text=""
                         android:textSize="54sp" />
 
                     <ImageView

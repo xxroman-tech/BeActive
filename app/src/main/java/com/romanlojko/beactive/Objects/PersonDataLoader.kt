@@ -3,6 +3,9 @@ package com.romanlojko.beactive.Objects
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
+/**
+ * Trieda sluzi na nacitane profilovych dat z firebasedatabase do objectu person
+ */
 object PersonDataLoader {
 
     private lateinit var dbRef: DatabaseReference
@@ -38,6 +41,9 @@ object PersonDataLoader {
         })
     }
 
+    /**
+     * Pridauje hodnoty z DB do atributov v objecte person
+     */
     private fun initPerson(data: Person) {
         Person.setName(data.getName())
         Person.setSurname(data.getSurname())

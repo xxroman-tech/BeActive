@@ -32,4 +32,8 @@
     <string name="progile_pohlavie_text">Pohlavie</string>
     <string name="profile_button_save">Uložiť</string>
     <string name="profile_button_logOut">Odhlásiť</string>
+
+    <!-- Dialog choose type of activity -->
+    <string name="choose_activity_hint_typ">Zadajte vykonanú aktivitu</string>
+    <string name="answerSave">Uloziť aktivitu</string>
 </resources>

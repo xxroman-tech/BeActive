@@ -1,20 +1,39 @@
 package com.romanlojko.beactive
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.provider.ContactsContract
+import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 import com.romanlojko.beactive.Objects.DataHolder
+import com.romanlojko.beactive.databinding.ActivityItemBinding.inflate
+import kotlinx.android.synthetic.main.typeofactivity_dialog.view.*
 
-class activityCounter : Fragment() {
+class activityCounter : Fragment() , SensorEventListener {
 
     // Enum pre tlacidla
     enum class TimerState{
@@ -31,35 +50,70 @@ class activityCounter : Fragment() {
     // uchovanie pociatocneho casu na zaciatku aktivity
     private var firstTime: Long = timerLengthSeconds
 
+    // Pre stepCounter
+    private var sensorManager: SensorManager? = null
+    private var totalSteps = 0f
+    private var prevTotalSteps = 0f
+    private var running = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentActivityCounterBinding.inflate(layoutInflater)
 
+        binding.textVievKrokomer.text = "0"
+
         binding.flaotActionButtonPlay.setOnClickListener { view: View ->
+            running = true
             startTimer()
             timerState = TimerState.Running
             updateButtons()
         }
 
-        binding.flaotActionButtonPause.setOnClickListener { view: View ->
-            timer?.cancel()
-            timerState = TimerState.Stopped
-            updateButtons()
-        }
+//        binding.flaotActionButtonPause.setOnClickListener { view: View ->
+//            running = false
+//            timer?.cancel()
+//            timerState = TimerState.Stopped
+//            updateButtons()
+//        }
 
         binding.flaotActionButtonClose.setOnClickListener{ view: View ->
             StopActivityDialog().show(childFragmentManager, StopActivityDialog.TAG)
+            prevTotalSteps = totalSteps
+            saveStepsData()
         }
 
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //nacita stepcounter data zo shared preferences
+        lodaData()
+
+        running = true
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+
+    /**
+     * Spustenie zaznamenavania senzoru a inicializacia timeru
+     */
     override fun onResume() {
         super.onResume()
 
         initTimer()
+
+        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+        if (stepSensor == null) {
+            Toast.makeText(activity, "Vas telefon neobsahuje senzor na detekovanie krokov", Toast.LENGTH_SHORT).show()
+        } else {
+            sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
+        }
+
+        binding.textVievKrokomer.text = "0"
 
         //TODO: remove background timer, hide notification
     }
@@ -73,6 +127,14 @@ class activityCounter : Fragment() {
 //        else if (timerState == TimerState.Paused){
 //            //TODO: show notification
 //        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+        sensorManager?.unregisterListener(this, stepSensor)
     }
 
     fun initTimer() {
@@ -104,6 +166,16 @@ class activityCounter : Fragment() {
 
         updateButtons()
         updateCountdownUI()
+
+        sendDataToFirebase()
+    }
+
+    /**
+     * Metoda ktora posle data na firebase po ukonceni aktivity
+     */
+    private fun sendDataToFirebase() {
+        DataHolder.incNumberOfActivity()
+        TypeOfActivityDialog().show(childFragmentManager, TypeOfActivityDialog.TAG)
     }
 
     private fun updateCountdownUI(){
@@ -118,11 +190,11 @@ class activityCounter : Fragment() {
         when (timerState) {
             TimerState.Running ->{
                 binding.flaotActionButtonPlay.isEnabled = false
-                binding.flaotActionButtonPause.isEnabled = true
+//                binding.flaotActionButtonPause.isEnabled = true
             }
             TimerState.Stopped -> {
                 binding.flaotActionButtonPlay.isEnabled = true
-                binding.flaotActionButtonPause.isEnabled = false
+//                binding.flaotActionButtonPause.isEnabled = false
             }
         }
     }
@@ -152,6 +224,62 @@ class activityCounter : Fragment() {
 
     }
 
+    class TypeOfActivityDialog: DialogFragment() {
+
+        //Firebase
+        private val myAuthorization: FirebaseAuth = FirebaseAuth.getInstance()
+        private lateinit var dbRef: DatabaseReference
+
+        override fun onCreateDialog(@Nullable savedInstanceState: Bundle?) : Dialog {
+            return (activity?.let{
+                val builder = AlertDialog.Builder(it)
+                val input = EditText(activity)
+
+                input.setHint(R.string.choose_activity_hint_typ)
+                input.inputType = InputType.TYPE_CLASS_TEXT
+                builder.setView(input)
+
+                builder.setTitle("Super výkon!")
+                    .setPositiveButton(R.string.answerSave,
+                        DialogInterface.OnClickListener { dialog, id ->
+                            DataHolder.setTypeOfActivity(input.text.toString())
+                            calucateBurnedCalories()
+                            pushToFirebase()
+                            activity?.onBackPressed()
+                        })
+                // Create the AlertDialog object and return it
+                builder.create()
+            } ?: throw IllegalStateException("Activity cannot be null"))
+        }
+
+        /**
+         * Vypocita a uloze spalene kalorie
+         */
+        private fun calucateBurnedCalories() {
+
+        }
+
+        /**
+         * Metoda kotra pushne novu aktivitu do firebase
+         */
+        private fun pushToFirebase() {
+            dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}" + "/${DataHolder.getNumberOfActivity()}")
+
+            var list: HashMap<String, Any> = HashMap()
+
+            list.put("caloriesBurned", DataHolder.getCaloriesBurned())
+            list.put("timeOfActivity", DataHolder.getTimeOfActivity())
+            list.put("totalSteps", DataHolder.getTotalSteps())
+            list.put("typeOfActivity", DataHolder.getTypeOfActivity())
+
+            dbRef.updateChildren(list as Map<String, Any>)
+        }
+
+        companion object {
+            const val TAG = "TypeOfActivityDialog"
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong("secondsLeft", secondsRemaining)
@@ -177,5 +305,28 @@ class activityCounter : Fragment() {
 
     }
 
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (running) {
+            totalSteps = event!!.values[0]
+            val currentSteps = totalSteps.toInt() - prevTotalSteps.toInt()
+            binding.textVievKrokomer.text = ("$currentSteps")
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
+
+    private fun saveStepsData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putFloat("prevTotalSteps", prevTotalSteps)
+        editor.apply()
+    }
+
+    private fun lodaData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val savedNumber = sharedPreferences.getFloat("prevTotalSteps", 0f)
+        Log.d("StepCounterData", "$savedNumber")
+        prevTotalSteps = savedNumber
+    }
 }
 

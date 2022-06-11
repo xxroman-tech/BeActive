@@ -1,14 +1,22 @@
 package com.romanlojko.beactive.Objects
 
+/**
+ * DataHolder object sa pouziva pri zaznamenavani novej aktivity
+ */
 object DataHolder {
     private var date: String = ""
     private var caloriesBurned: Int = 0
     private var timeOfActivity: Int = 0
     private var totalSteps: Int = 0
     private var typeOfActivity: String = ""
+    private var numberOfActivity: Int = 0
 
     fun getDate(): String {
         return date
+    }
+
+    fun getNumberOfActivity(): Int {
+        return numberOfActivity
     }
 
     fun getCaloriesBurned(): Int {
@@ -29,6 +37,10 @@ object DataHolder {
 
     fun setDate(pDate: String) {
         date = pDate
+    }
+
+    fun incNumberOfActivity() {
+        numberOfActivity ++
     }
 
     fun setCaloriesBurned(pCaloriesBurned: Int) {

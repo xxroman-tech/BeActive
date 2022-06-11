@@ -65,6 +65,7 @@ class MainApplication : Fragment() {
 
         binding.buttonAddActivity.setOnClickListener{view : View ->
             // pridanie date do DataHolder triedy
+            getDateFromCalendarView()
             DataHolder.setDate(date)
             onMenuButtonClick()
             view.findNavController().navigate(R.id.action_mainApplication_to_timePickerDialog2)
@@ -106,6 +107,9 @@ class MainApplication : Fragment() {
         clickedMenuButton = !clickedMenuButton //if (!clickedMenuButton) clickedMenuButton = true else clickedMenuButton = false - skratene
     }
 
+    /**
+     * Metoda ktora nastavuje animacie pri kliknuti na menu button
+     */
     private fun setAnimation(clicked: Boolean) {
         if (!clicked) {
             button_add_activity.startAnimation(fromBottom)
@@ -131,6 +135,10 @@ class MainApplication : Fragment() {
         }
     }
 
+    /**
+     * Metoda spristupnuje data o aktivitach v dani den pre usera
+     * a uklada ich do listu activityList, ktory sa nasledne zobrazi v recyclerviewe
+     */
     private fun getUserData() {
 
         dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/$date")
@@ -149,6 +157,9 @@ class MainApplication : Fragment() {
                         if (activity != null) {
                             activityList.add(activity)
                         }
+
+                        // Navysenie poctu aktivit v danom dni pre vkladanie do DB
+                        DataHolder.incNumberOfActivity()
                     }
 
                     activitiesRecycleView.adapter = RecycleViewAdapter(activityList)
@@ -164,11 +175,17 @@ class MainApplication : Fragment() {
         })
     }
 
+    /**
+     * Metoda nastavi atribut date na datum zo zakliknuteho datumu v calendarViewe
+     */
     private fun getDateFromCalendarView() {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+        val dateFormat = SimpleDateFormat("dd-M-yyyy")
         date = dateFormat.format(Date(binding.CalendarView.date))
     }
 
+    /**
+     * Ak nieje user prihlaseeny, tak ho poslem na login screen
+     */
     override fun onStart() {
         super.onStart()
 
