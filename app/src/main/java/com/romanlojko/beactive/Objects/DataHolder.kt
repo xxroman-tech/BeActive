@@ -5,7 +5,7 @@ package com.romanlojko.beactive.Objects
  */
 object DataHolder {
     private var date: String = ""
-    private var caloriesBurned: Int = 0
+    private var caloriesBurned: String = ""
     private var timeOfActivity: Int = 0
     private var totalSteps: Int = 0
     private var typeOfActivity: String = ""
@@ -19,7 +19,7 @@ object DataHolder {
         return numberOfActivity
     }
 
-    fun getCaloriesBurned(): Int {
+    fun getCaloriesBurned(): String {
         return caloriesBurned
     }
 
@@ -43,7 +43,7 @@ object DataHolder {
         numberOfActivity ++
     }
 
-    fun setCaloriesBurned(pCaloriesBurned: Int) {
+    fun setCaloriesBurned(pCaloriesBurned: String) {
         caloriesBurned = pCaloriesBurned
     }
 

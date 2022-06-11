@@ -3,7 +3,7 @@ package com.romanlojko.beactive.Objects
 class UserActivity {
 
     private var date: String = ""
-    private var caloriesBurned: Int = 0
+    private var caloriesBurned: String = ""
     private var timeOfActivity: Int = 0
     private var totalSteps: Int = 0
     private var typeOfActivity: String = ""
@@ -12,7 +12,7 @@ class UserActivity {
         return date
     }
 
-    fun getCaloriesBurned(): Int {
+    fun getCaloriesBurned(): String {
         return caloriesBurned
     }
 
@@ -32,7 +32,7 @@ class UserActivity {
         date = pDate
     }
 
-    fun setCaloriesBurned(pCaloriesBurned: Int) {
+    fun setCaloriesBurned(pCaloriesBurned: String) {
         caloriesBurned = pCaloriesBurned
     }
 

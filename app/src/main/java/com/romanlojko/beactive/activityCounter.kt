@@ -137,6 +137,9 @@ class activityCounter : Fragment() , SensorEventListener {
         sensorManager?.unregisterListener(this, stepSensor)
     }
 
+    /**
+     * Inicializacia timeru
+     */
     fun initTimer() {
         setNewTimerLength()
         secondsRemaining = timerLengthSeconds
@@ -148,6 +151,9 @@ class activityCounter : Fragment() , SensorEventListener {
         binding.progressCasovac.max = timerLengthSeconds.toInt()
     }
 
+    /**
+     * Metoda ktora sa pouziva na spustenie timeru
+     */
     private fun startTimer() {
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() = onTimerFinished()
@@ -159,6 +165,9 @@ class activityCounter : Fragment() , SensorEventListener {
         }.start()
     }
 
+    /**
+     * Medtoda ktora sa zavola pri skonceni odpocitavanie timeru
+     */
     private fun onTimerFinished() {
         secondsRemaining = timerLengthSeconds
 
@@ -175,9 +184,23 @@ class activityCounter : Fragment() , SensorEventListener {
      */
     private fun sendDataToFirebase() {
         DataHolder.incNumberOfActivity()
+        calcTotalBurnedCalories()
         TypeOfActivityDialog().show(childFragmentManager, TypeOfActivityDialog.TAG)
     }
 
+    /**
+     * Vypocet spalenych kalorii
+     */
+    private fun calcTotalBurnedCalories() {
+        var burnedCalories: String = ""
+
+        burnedCalories = ((totalSteps - prevTotalSteps) / 20).toString()
+        DataHolder.setCaloriesBurned(burnedCalories)
+    }
+
+    /**
+     * Updatuje UI na obrazovke activityCounter
+     */
     private fun updateCountdownUI(){
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
@@ -186,6 +209,9 @@ class activityCounter : Fragment() , SensorEventListener {
         binding.progressCasovac.progress = (firstTime - secondsRemaining).toInt()
     }
 
+    /**
+     * Updatuje stav button, ci sa daju zakliknut alebo nie
+     */
     private fun updateButtons() {
         when (timerState) {
             TimerState.Running ->{
@@ -199,6 +225,11 @@ class activityCounter : Fragment() , SensorEventListener {
         }
     }
 
+    /**
+     * Trieda zdedena od DialogFragmentu
+     * Obsahuje alertdialog ktory sa zobrazi pred ukoncenim novej aktivity a teda nove data sa
+     * neulozia do firebase DB
+     */
     class StopActivityDialog : DialogFragment() {
 
         override fun onCreateDialog(@Nullable savedInstanceState: Bundle?): Dialog {
@@ -224,6 +255,11 @@ class activityCounter : Fragment() , SensorEventListener {
 
     }
 
+    /**
+     * Trieda zdedena od DialogFragmentu
+     * Zobrazuje Dialog so vstupnym oknom kam sa zadava typ aktivity pred finalym
+     * ulozenim do firebase DB
+     */
     class TypeOfActivityDialog: DialogFragment() {
 
         //Firebase
@@ -243,20 +279,12 @@ class activityCounter : Fragment() , SensorEventListener {
                     .setPositiveButton(R.string.answerSave,
                         DialogInterface.OnClickListener { dialog, id ->
                             DataHolder.setTypeOfActivity(input.text.toString())
-                            calucateBurnedCalories()
                             pushToFirebase()
                             activity?.onBackPressed()
                         })
                 // Create the AlertDialog object and return it
                 builder.create()
             } ?: throw IllegalStateException("Activity cannot be null"))
-        }
-
-        /**
-         * Vypocita a uloze spalene kalorie
-         */
-        private fun calucateBurnedCalories() {
-
         }
 
         /**
@@ -315,6 +343,9 @@ class activityCounter : Fragment() , SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
 
+    /**
+     * Metoda uklada data do sharedPreferences pre zachovanie v pamati
+     */
     private fun saveStepsData() {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -322,6 +353,9 @@ class activityCounter : Fragment() , SensorEventListener {
         editor.apply()
     }
 
+    /**
+     * Nacitavanie dat zo sharedPreferences
+     */
     private fun lodaData() {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val savedNumber = sharedPreferences.getFloat("prevTotalSteps", 0f)

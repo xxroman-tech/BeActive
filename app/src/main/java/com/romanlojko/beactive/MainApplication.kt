@@ -157,9 +157,6 @@ class MainApplication : Fragment() {
                         if (activity != null) {
                             activityList.add(activity)
                         }
-
-                        // Navysenie poctu aktivit v danom dni pre vkladanie do DB
-                        DataHolder.incNumberOfActivity()
                     }
 
                     activitiesRecycleView.adapter = RecycleViewAdapter(activityList)
