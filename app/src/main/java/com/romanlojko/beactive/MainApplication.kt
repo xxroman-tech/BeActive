@@ -145,6 +145,10 @@ class MainApplication : Fragment() {
 
         dbRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+
+                // Resetuje pocet aktivity v dni
+                DataHolder.resetNumberOfActivity()
+
                 // Ideme prechadzat Realtime databazu
                 if(snapshot.exists()) {
 
@@ -157,6 +161,8 @@ class MainApplication : Fragment() {
                         if (activity != null) {
                             activityList.add(activity)
                         }
+
+                        DataHolder.incNumberOfActivity()
                     }
 
                     activitiesRecycleView.adapter = RecycleViewAdapter(activityList)

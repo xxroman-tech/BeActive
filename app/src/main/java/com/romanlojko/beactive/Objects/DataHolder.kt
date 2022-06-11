@@ -43,6 +43,10 @@ object DataHolder {
         numberOfActivity ++
     }
 
+    fun resetNumberOfActivity() {
+        numberOfActivity = 0
+    }
+
     fun setCaloriesBurned(pCaloriesBurned: String) {
         caloriesBurned = pCaloriesBurned
     }

@@ -177,6 +177,9 @@ class activityCounter : Fragment() , SensorEventListener {
         updateCountdownUI()
 
         sendDataToFirebase()
+
+        prevTotalSteps = totalSteps
+        saveStepsData()
     }
 
     /**
@@ -184,6 +187,7 @@ class activityCounter : Fragment() , SensorEventListener {
      */
     private fun sendDataToFirebase() {
         DataHolder.incNumberOfActivity()
+        DataHolder.setTotalSteps((totalSteps - prevTotalSteps).toInt())
         calcTotalBurnedCalories()
         TypeOfActivityDialog().show(childFragmentManager, TypeOfActivityDialog.TAG)
     }
