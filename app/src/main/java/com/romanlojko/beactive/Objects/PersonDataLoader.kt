@@ -1,5 +1,8 @@
 package com.romanlojko.beactive.Objects
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -50,5 +53,6 @@ object PersonDataLoader {
         Person.setWeight(data.getWeight())
         Person.setHeight(data.getHeight())
         Person.setSex(data.getSex())
+        Person.setAge(data.getAge())
     }
 }

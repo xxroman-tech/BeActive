@@ -3,6 +3,10 @@ package com.romanlojko.beactive.Objects
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+/**
+ * Object predstavuje osobu ktora je prihlasena v aplikacii a docasne si uchovava
+ * data nacitane z firebase o uzivatelovi ako, meno, sex, age...
+ */
 object Person {
 
     private var name: String = ""
@@ -10,6 +14,7 @@ object Person {
     private var height: Double = 0.0
     private var weight: Double = 0.0
     private var sex: String = ""
+    private var age: Int = 0
 
     fun getName(): String {
         return name
@@ -29,6 +34,10 @@ object Person {
 
     fun getSex(): String {
         return sex
+    }
+
+    fun getAge(): Int {
+        return age
     }
 
     fun setName(pName: String) {
@@ -54,5 +63,9 @@ object Person {
 //            sex = Sex.FEMALE
 //        }
         sex = pSex
+    }
+
+    fun setAge(pVek: Int) {
+        age = pVek
     }
 }

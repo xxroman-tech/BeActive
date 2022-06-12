@@ -29,9 +29,15 @@
     <string name="profile_weight_jednotky">kg</string>
     <string name="profile_height_text">Výška</string>
     <string name="profile_height_jednotky">cm</string>
+    <string name="progile_age">Vek</string>
     <string name="progile_pohlavie_text">Pohlavie</string>
     <string name="profile_button_save">Uložiť</string>
     <string name="profile_button_logOut">Odhlásiť</string>
+    <string name="profile_bmi">BMI</string>
+
+        <!-- Pohlavie -->
+    <string name="profile_radio_male">Muž</string>>
+    <string name="profile_radio_female">Žena</string>
 
     <!-- Dialog choose type of activity -->
     <string name="choose_activity_hint_typ">Zadajte vykonanú aktivitu</string>

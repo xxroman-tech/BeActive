@@ -319,6 +319,8 @@ class activityCounter : Fragment() , SensorEventListener {
             outState.putBoolean("timerRunning", true)
         else
             outState.putBoolean("timerRunning", false)
+        val currentSteps = totalSteps - prevTotalSteps
+        outState.putFloat("steps", currentSteps)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
