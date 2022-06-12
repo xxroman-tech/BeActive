@@ -18,8 +18,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.romanlojko.beactive.Objects.DataHolder
 import com.romanlojko.beactive.Objects.Person
-import com.romanlojko.beactive.Objects.PersonDataLoader
-import com.romanlojko.beactive.databinding.FragmentLoginBinding
 import com.romanlojko.beactive.databinding.FragmentProfileBinding
 import kotlinx.android.synthetic.main.activity_main.*
 

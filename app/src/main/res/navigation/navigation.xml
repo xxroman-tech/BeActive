@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_registerFragment_to_profile"
             app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
     </fragment>
     <dialog
         android:id="@+id/timePickerDialog2"

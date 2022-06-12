@@ -39,7 +39,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/name_input"
+                    android:id="@+id/reg_name_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:inputType="text" />
 
                 <EditText
-                    android:id="@+id/surname_input"
+                    android:id="@+id/reg_surname_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:inputType="text" />
 
                 <EditText
-                    android:id="@+id/mail_input"
+                    android:id="@+id/reg_mail_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                     android:background="@drawable/rounded_edit_text"/>
 
                 <EditText
-                    android:id="@+id/password_input"
+                    android:id="@+id/reg_password_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                     android:background="@drawable/rounded_edit_text"/>
 
                 <EditText
-                    android:id="@+id/password_input_check"
+                    android:id="@+id/reg_password_input_check"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -41,7 +41,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/editTextEmail"
-                    android:inputType="text"
                     android:background="@drawable/rounded_edit_text"/>
 
                 <EditText

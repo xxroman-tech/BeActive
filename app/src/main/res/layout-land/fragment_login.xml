@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_begin="330dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,13 +42,12 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/username_input"
+                    android:id="@+id/mail_input"
                     style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_edit_text"
-                    android:hint="@string/editTextEmail"
-                    android:inputType="text" />
+                    android:hint="@string/editTextEmail" />
 
                 <EditText
                     android:id="@+id/password_input"

@@ -1,6 +1,8 @@
 package com.romanlojko.beactive
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -8,24 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.romanlojko.beactive.Objects.Person
 import com.romanlojko.beactive.databinding.FragmentRegisterBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_register.*
 
-
+/**
+ * Trieda Register fragment ktora dedi od triedy Fragment predstavuje samotne okno registracie
+ * noveho uzivatela s jej funkcionalitami
+ */
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
-
-    private lateinit var mailEditText : EditText
-    private lateinit var passwordEditText : EditText
-    private lateinit var passwordCheckEditText : EditText
-
-    private lateinit var myAuthorization: FirebaseAuth
+    private val myAuthorization: FirebaseAuth = FirebaseAuth.getInstance()
+    private var registrovany = false
+    private var nechceSaRegistrovat = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,17 +40,37 @@ class RegisterFragment : Fragment() {
     ): View? {
         binding = FragmentRegisterBinding.inflate(layoutInflater)
 
-        mailEditText = binding.mailInput!!
-        passwordEditText = binding.passwordInput!!
-        passwordCheckEditText = binding.passwordInputCheck!!
-
-        myAuthorization = FirebaseAuth.getInstance()
-
         binding.registerButton.setOnClickListener { view : View ->
             createUser()
         }
 
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                nechceSaRegistrovat = true
+                NavHostFragment.findNavController(myNavHostFragment).navigate(R.id.action_registerFragment_to_loginFragment2)
+            }
+        })
+
         return binding.root;
+    }
+
+    /**
+     * Nacita data zo sharedPreferences pri orentation change
+     */
+    override fun onStart() {
+        super.onStart()
+        loadLoginInputData()
+    }
+
+    /**
+     * Ulozi data z inputov pre orientation change
+     */
+    override fun onPause() {
+        super.onPause()
+        if (registrovany || nechceSaRegistrovat)
+            deleteData()
+        else
+            saveLoginInputData()
     }
 
     /**
@@ -52,33 +79,34 @@ class RegisterFragment : Fragment() {
      * presmerovany na profile fragment kde vyplni potrebne udaje
      */
     private fun createUser() {
-        val mail : String = mailEditText?.text.toString()
-        val password : String = passwordEditText?.text.toString()
-        val passwordCheck : String = passwordCheckEditText?.text.toString()
+        val mail : String = binding.regMailInput.text.toString()
+        val password : String = binding.regPasswordInput.text.toString()
+        val passwordCheck : String = binding.regPasswordInputCheck.text.toString()
 
         // Kontrola ci pouzivatel spravne vyplnil polia
-        if (TextUtils.isEmpty(binding.nameInput?.text)) {
-            binding.nameInput?.setError("Meno nemôže byť prázdne")
-            binding.nameInput?.requestFocus()
-        } else if (TextUtils.isEmpty(binding.surnameInput?.text)) {
-            binding.surnameInput?.setError("Prezvisko nemôže byť prázdne")
-            binding.surnameInput?.requestFocus()
+        if (TextUtils.isEmpty(binding.regNameInput.text)) {
+            binding.regNameInput.setError("Meno nemôže byť prázdne")
+            binding.regNameInput.requestFocus()
+        } else if (TextUtils.isEmpty(binding.regSurnameInput.text)) {
+            binding.regSurnameInput.setError("Prezvisko nemôže byť prázdne")
+            binding.regSurnameInput.requestFocus()
         } else if (TextUtils.isEmpty(mail)) {
-            mailEditText?.setError("E-mail nemôže byť prázdny")
-            mailEditText?.requestFocus()
+            binding.regMailInput.setError("E-mail nemôže byť prázdny")
+            binding.regMailInput.requestFocus()
         } else if (TextUtils.isEmpty(password)) {
-            passwordEditText?.setError("Heslo nemôže byť prázdne")
-            passwordEditText?.requestFocus()
+            binding.regPasswordInput.setError("Heslo nemôže byť prázdne")
+            binding.regPasswordInput.requestFocus()
         } else if (TextUtils.isEmpty(passwordCheck)) {
-            passwordCheckEditText?.setError("Heslo je potrebné zopakovať")
-            passwordCheckEditText?.requestFocus()
+            binding.regPasswordInputCheck.setError("Heslo je potrebné zopakovať")
+            binding.regPasswordInputCheck.requestFocus()
         } else {
             // Ak je vsetko vyplene spravne tak sa vytvori user na Firebase Auth
             myAuthorization.createUserWithEmailAndPassword(mail, password).addOnCompleteListener(
                 OnCompleteListener<AuthResult?> { task ->
                     if (task.isSuccessful) {
-                        Person.setName((binding.nameInput!!.text).toString())
-                        Person.setSurname((binding.surnameInput!!.text).toString())
+                        registrovany = true
+                        Person.setName((binding.regNameInput.text).toString())
+                        Person.setSurname((binding.regSurnameInput.text).toString())
                         Toast.makeText(
                             activity,
                             "Registrácia prebehla úspešne, prosím vyplnte základné údaje",
@@ -96,6 +124,40 @@ class RegisterFragment : Fragment() {
                 }
             )
         }
+    }
+
+    /**
+     * Metoda uklada data do sharedPreferences pre zachovanie v pamati
+     */
+    private fun saveLoginInputData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefRegister", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("regName", binding.regNameInput.text.toString())
+        editor.putString("regSurname", binding.regSurnameInput.text.toString())
+        editor.putString("regMail", binding.regMailInput.text.toString())
+        editor.putString("regPass", binding.regPasswordInput.text.toString())
+        editor.putString("regPassCheck", binding.regPasswordInputCheck.text.toString())
+        editor.apply()
+    }
+
+    /**
+     * Nacitavanie dat zo sharedPreferences
+     */
+    private fun loadLoginInputData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefRegister", Context.MODE_PRIVATE)
+        binding.regNameInput.setText(sharedPreferences.getString("regName", ""))
+        binding.regSurnameInput.setText(sharedPreferences.getString("regSurname", ""))
+        binding.regMailInput.setText(sharedPreferences.getString("regMail", ""))
+        binding.regPasswordInput.setText(sharedPreferences.getString("regPass", ""))
+        binding.regPasswordInputCheck.setText(sharedPreferences.getString("regPassCheck", ""))
+    }
+
+    /**
+     * Zmaze data zo sharedPref ak ich uz nepotrebujeme
+     */
+    private fun deleteData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefRegister", Context.MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply()
     }
 
 }
