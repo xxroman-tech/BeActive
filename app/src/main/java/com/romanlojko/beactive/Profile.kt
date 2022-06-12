@@ -157,6 +157,8 @@ class Profile : Fragment() {
                 ).show()
 
                 // UpdateUI
+                binding.editTextWeight.onEditorAction(EditorInfo.IME_ACTION_DONE)
+                binding.editTextHeight.onEditorAction(EditorInfo.IME_ACTION_DONE)
                 binding.editTextAge.onEditorAction(EditorInfo.IME_ACTION_DONE)
                 calcAndShowBMI()
                 zaklikniSex()
