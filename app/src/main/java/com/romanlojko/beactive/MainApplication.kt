@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.CalendarView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,6 +66,18 @@ class MainApplication : Fragment() {
 
         activityList = arrayListOf<UserActivity>()
 
+        setListeners()
+
+        getDateFromCalendarView()
+        getUserData()
+
+        return binding.root
+    }
+
+    /**
+     * Nastavi vsetky listenery
+     */
+    private fun setListeners() {
         binding.buttonAddActivity.setOnClickListener{view : View ->
             // pridanie date do DataHolder triedy
             getDateFromCalendarView()
@@ -92,10 +107,9 @@ class MainApplication : Fragment() {
             getUserData()
         }
 
-        getDateFromCalendarView()
-        getUserData()
-
-        return binding.root
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { }
+        })
     }
 
     /**

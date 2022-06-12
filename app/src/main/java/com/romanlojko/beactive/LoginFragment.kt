@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
@@ -48,6 +49,10 @@ class LoginFragment : Fragment() {
         binding.registerLink.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_loginFragment2_to_registerFragment)
         }
+
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { }
+        })
 
         return binding.root
     }
