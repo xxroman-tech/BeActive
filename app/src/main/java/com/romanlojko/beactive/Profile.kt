@@ -12,13 +12,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.romanlojko.beactive.Objects.DataHolder
 import com.romanlojko.beactive.Objects.Person
 import com.romanlojko.beactive.Objects.PersonDataLoader
 import com.romanlojko.beactive.databinding.FragmentLoginBinding
 import com.romanlojko.beactive.databinding.FragmentProfileBinding
+import kotlinx.android.synthetic.main.activity_main.*
 
 class Profile : Fragment() {
 
@@ -95,6 +98,7 @@ class Profile : Fragment() {
             if (myAuthorization!=null && myAuthorization.currentUser != null) {
                 myAuthorization.signOut()
                 view.findNavController().navigate(R.id.action_profile_to_loginFragment2)
+                vymazData()
             }
         }
 
@@ -105,6 +109,20 @@ class Profile : Fragment() {
             }
         }
 
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                NavHostFragment.findNavController(myNavHostFragment).navigate(R.id.action_profile_to_mainApplication)
+            }
+        })
+
+    }
+
+    /**
+     * Metoda ktora zavola deleteData z objectov ktore uchovavaju data
+     */
+    private fun vymazData() {
+        DataHolder.deleteData()
+        Person.deleteData()
     }
 
     /**

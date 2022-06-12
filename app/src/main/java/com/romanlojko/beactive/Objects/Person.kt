@@ -57,15 +57,22 @@ object Person {
     }
 
     fun setSex(pSex: String) {
-//        if (pSex.equals("male")) {
-//            sex = Sex.MALE
-//        } else if (pSex.equals("female")) {
-//            sex = Sex.FEMALE
-//        }
         sex = pSex
     }
 
     fun setAge(pVek: Int) {
         age = pVek
+    }
+
+    /**
+     * Zmaze data v objecte
+     */
+    fun deleteData() {
+        name = ""
+        surname = ""
+        weight = 0.0
+        height = 0.0
+        age = 0
+        sex = ""
     }
 }

@@ -340,6 +340,10 @@ class activityCounter : Fragment() , SensorEventListener {
 
     }
 
+    /**
+     * Metoda ktora handule step sensor
+     * @param event
+     */
     override fun onSensorChanged(event: SensorEvent?) {
         if (running) {
             totalSteps = event!!.values[0]

@@ -62,4 +62,16 @@ object DataHolder {
     fun setTypeOfActivity(pTypeOfActivity: String) {
         typeOfActivity = pTypeOfActivity
     }
+
+    /**
+     * Zmaze data v objecte
+     */
+    fun deleteData() {
+        date = ""
+        totalSteps = 0
+        caloriesBurned = ""
+        timeOfActivity = 0
+        typeOfActivity = ""
+        numberOfActivity = 0
+    }
 }

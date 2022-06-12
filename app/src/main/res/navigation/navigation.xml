@@ -42,8 +42,8 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_registerFragment_to_mainApplication"
-            app:destination="@id/mainApplication" />
+            android:id="@+id/action_registerFragment_to_profile"
+            app:destination="@id/profile" />
     </fragment>
     <dialog
         android:id="@+id/timePickerDialog2"
@@ -60,5 +60,8 @@
         <action
             android:id="@+id/action_profile_to_loginFragment2"
             app:destination="@id/loginFragment2" />
+        <action
+            android:id="@+id/action_profile_to_mainApplication"
+            app:destination="@id/mainApplication" />
     </fragment>
 </navigation>

@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.romanlojko.beactive.Objects.Person
 import com.romanlojko.beactive.databinding.FragmentRegisterBinding
 
 
@@ -45,13 +46,24 @@ class RegisterFragment : Fragment() {
         return binding.root;
     }
 
+    /**
+     * Metoda ktora nacita data z input boxov a pokusi sa
+     * prihlasit uzivatela do firebase, ak sa podari, tak je uzivatel
+     * presmerovany na profile fragment kde vyplni potrebne udaje
+     */
     private fun createUser() {
         val mail : String = mailEditText?.text.toString()
         val password : String = passwordEditText?.text.toString()
         val passwordCheck : String = passwordCheckEditText?.text.toString()
 
         // Kontrola ci pouzivatel spravne vyplnil polia
-        if (TextUtils.isEmpty(mail)) {
+        if (TextUtils.isEmpty(binding.nameInput?.text)) {
+            binding.nameInput?.setError("Meno nemôže byť prázdne")
+            binding.nameInput?.requestFocus()
+        } else if (TextUtils.isEmpty(binding.surnameInput?.text)) {
+            binding.surnameInput?.setError("Prezvisko nemôže byť prázdne")
+            binding.surnameInput?.requestFocus()
+        } else if (TextUtils.isEmpty(mail)) {
             mailEditText?.setError("E-mail nemôže byť prázdny")
             mailEditText?.requestFocus()
         } else if (TextUtils.isEmpty(password)) {
@@ -65,12 +77,15 @@ class RegisterFragment : Fragment() {
             myAuthorization.createUserWithEmailAndPassword(mail, password).addOnCompleteListener(
                 OnCompleteListener<AuthResult?> { task ->
                     if (task.isSuccessful) {
+                        Person.setName((binding.nameInput!!.text).toString())
+                        Person.setSurname((binding.surnameInput!!.text).toString())
                         Toast.makeText(
                             activity,
-                            "Registrácia prebehla úspešne",
+                            "Registrácia prebehla úspešne, prosím vyplnte základné údaje",
                             Toast.LENGTH_SHORT
                         ).show()
-                        view?.findNavController()?.navigate(R.id.action_registerFragment_to_mainApplication)
+                        // Najprv sa presmeruje na profile kde je potrebne vyplnit udaje
+                        view?.findNavController()?.navigate(R.id.action_registerFragment_to_profile)
                     } else {
                         Toast.makeText(
                             activity,
