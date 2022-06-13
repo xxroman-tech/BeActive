@@ -21,12 +21,22 @@ import com.romanlojko.beactive.Objects.Person
 import com.romanlojko.beactive.databinding.FragmentProfileBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Trieda profile predstavuje cast aplikacie kde si uzivatel dokaze nastavit svoje
+ * zakladne telesne udaje a dokaze sa tu odhlasit z aplikacie
+ * @author Roman Lojko
+ */
 class Profile : Fragment() {
 
     lateinit var binding: FragmentProfileBinding
 
     lateinit var myAuthorization: FirebaseAuth
 
+    /**
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu
+     * a naicializuje objekty v nom
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

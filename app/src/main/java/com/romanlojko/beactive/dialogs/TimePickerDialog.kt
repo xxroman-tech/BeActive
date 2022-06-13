@@ -13,9 +13,15 @@ import kotlinx.android.synthetic.main.float_number_picker.*
 /**
  * Trieda pre timepickerDialog
  * Pouziva sa na vyberanie casu novej aktivity.
+ * @author Roman Lojko
  */
 class TimePickerDialog() : DialogFragment() {
 
+    /**
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu
+     * a naicializuje objekty v nom
+     * @return infalter
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,6 +30,10 @@ class TimePickerDialog() : DialogFragment() {
         return inflater.inflate(R.layout.float_number_picker, container, false)
     }
 
+    /**
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu po onCreateView
+     * a naicializuje objekty v nom
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

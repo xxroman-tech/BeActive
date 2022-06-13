@@ -1,13 +1,18 @@
 package com.romanlojko.beactive
 
 import android.app.Dialog
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.ContactsContract
@@ -23,24 +28,35 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
+import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 import com.romanlojko.beactive.Objects.DataHolder
 import com.romanlojko.beactive.databinding.ActivityItemBinding.inflate
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.typeofactivity_dialog.view.*
 
+/**
+ * ActivityCounter je trieda ktora dedi Fragment a sensoreventListener
+ * predstavuje cast aplikacie, kde meriame novu aktivity ktoru
+ * si chce uzivatel zaznamenat, po ubehnuti casu sa data odoslu na Firebase RDB
+ * @author Roman Lojko
+ */
 class activityCounter : Fragment() , SensorEventListener {
 
-    // Enum pre tlacidla
+    /**
+     * Enum pre tlacidla
+     */
     enum class TimerState{
-        Stopped, Paused, Running
+        Stopped, Paused, Running, ENDED
     }
 
     lateinit var binding: FragmentActivityCounterBinding
@@ -59,6 +75,14 @@ class activityCounter : Fragment() , SensorEventListener {
     private var prevTotalSteps = 0f
     private var running = false
 
+    // Notofikacie
+    val CHANNEL_ID : String = "channelID"
+    val CHANNEL_NAME : String = "channelName"
+
+    /**
+     * Lifecycle metoda ktora sa zavola pri otvoreni aplikacie alebo pri zmene rotacie
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -90,6 +114,10 @@ class activityCounter : Fragment() , SensorEventListener {
         return binding.root
     }
 
+    /**
+     * Lifecycle metoda, loadujem data zo sharedpreferences a spusta sensor managera
+     * pre detekovanie krokov
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -119,17 +147,23 @@ class activityCounter : Fragment() , SensorEventListener {
         //TODO: remove background timer, hide notification
     }
 
+    /**
+     * Lifecycle metoda, zobrazuje notifikacie pri shovani aplikacie
+     */
     override fun onPause() {
         super.onPause()
 //        if (timerState == TimerState.Running){
 //            timer.cancel()
 //            //TODO: start background timer and show notification
 //        }
-//        else if (timerState == TimerState.Paused){
+//        if (timerState == TimerState.ENDED){
 //            //TODO: show notification
 //        }
     }
 
+    /**
+     * Lifecycle metoda ktora unregistreListener na stepcount sensor po ukonceni aplikacie
+     */
     override fun onDestroy() {
         super.onDestroy()
 
@@ -170,6 +204,7 @@ class activityCounter : Fragment() , SensorEventListener {
      * Medtoda ktora sa zavola pri skonceni odpocitavanie timeru
      */
     private fun onTimerFinished() {
+        timerState = TimerState.ENDED
         secondsRemaining = timerLengthSeconds
 
         binding.progressCasovac.progress = 0
@@ -296,6 +331,18 @@ class activityCounter : Fragment() , SensorEventListener {
          * Metoda kotra pushne novu aktivitu do firebase
          */
         private fun pushToFirebase() {
+
+            dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}")
+
+            // Zistim pocet potomkov aby som vedel kam vkladat
+            dbRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    DataHolder.setNumberOfActivity(snapshot.childrenCount)
+                }
+
+                override fun onCancelled(error: DatabaseError) { }
+            })
+
             dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}" + "/${DataHolder.getNumberOfActivity()}")
 
             var list: HashMap<String, Any> = HashMap()
@@ -313,6 +360,11 @@ class activityCounter : Fragment() , SensorEventListener {
         }
     }
 
+    /**
+     * Metoda ulozi data do Bundle pred ukoncenim alebo ototcenim displeja
+     * alebo ukoncenim, minimalizovanim aplikacie
+     * @param outState
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong("secondsLeft", secondsRemaining)
@@ -324,6 +376,11 @@ class activityCounter : Fragment() , SensorEventListener {
         outState.putFloat("steps", currentSteps)
     }
 
+    /**
+     * Nacita data z Bundle pri nacitani viewu nanovo
+     * pouziva sa hlavne pri zmene orientacie obrazovky
+     * @param savedInstanceState
+     */
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {

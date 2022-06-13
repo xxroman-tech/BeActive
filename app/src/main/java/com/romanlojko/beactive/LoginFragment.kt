@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 /**
  * Trieda Login fragment ktora dedi od triedy Fragment predstavuje samotne okno loginu
  * s jej funkcionalitami
+ * @author Roman Lojko
  */
 class LoginFragment : Fragment() {
 
@@ -36,8 +37,9 @@ class LoginFragment : Fragment() {
     private var prihlaseny = false
 
     /**
-     * Metoda ktora je od predka, zavola sa vzdy pri otvoreni fragmentu
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu
      * a naicializuje objekty v nom
+     * @return binding.root
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

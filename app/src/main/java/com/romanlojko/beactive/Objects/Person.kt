@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseUser
 /**
  * Object predstavuje osobu ktora je prihlasena v aplikacii a docasne si uchovava
  * data nacitane z firebase o uzivatelovi ako, meno, sex, age...
+ * @author Roman Lojko
  */
 object Person {
 

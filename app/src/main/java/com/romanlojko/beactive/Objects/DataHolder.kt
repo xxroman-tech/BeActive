@@ -2,6 +2,7 @@ package com.romanlojko.beactive.Objects
 
 /**
  * DataHolder object sa pouziva pri zaznamenavani novej aktivity
+ * @author Roman Lojko
  */
 object DataHolder {
     private var date: String = ""
@@ -9,13 +10,13 @@ object DataHolder {
     private var timeOfActivity: Int = 0
     private var totalSteps: Int = 0
     private var typeOfActivity: String = ""
-    private var numberOfActivity: Int = 0
+    private var numberOfActivity: Long = 0
 
     fun getDate(): String {
         return date
     }
 
-    fun getNumberOfActivity(): Int {
+    fun getNumberOfActivity(): Long {
         return numberOfActivity
     }
 
@@ -41,6 +42,10 @@ object DataHolder {
 
     fun incNumberOfActivity() {
         numberOfActivity ++
+    }
+
+    fun setNumberOfActivity(number: Long) {
+        numberOfActivity = number
     }
 
     fun resetNumberOfActivity() {

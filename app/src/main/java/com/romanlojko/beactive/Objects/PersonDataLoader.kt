@@ -8,6 +8,7 @@ import com.google.firebase.database.*
 
 /**
  * Trieda sluzi na nacitane profilovych dat z firebasedatabase do objectu person
+ * @author Roman Lojko
  */
 object PersonDataLoader {
 

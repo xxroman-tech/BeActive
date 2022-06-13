@@ -1,6 +1,8 @@
 package com.romanlojko.beactive
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,7 +28,14 @@ import kotlinx.android.synthetic.main.fragment_main_application.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * MainApplicationFragment je trieda ktora dedi od Fragmentu a reprezentuje
+ * hlavnu cast aplikacie kde zobrazujeme vsetky aktivity v dany zakliknuty den
+ * a taktiez obsahuje menu vo forme buttonov, ktore maju nastaveny animation
+ * @author Roman Lojko
+ */
 class MainApplication : Fragment() {
 
     private lateinit var binding: FragmentMainApplicationBinding
@@ -51,6 +60,11 @@ class MainApplication : Fragment() {
         PersonDataLoader.loadDataToPerson()
     }
 
+    /**
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu
+     * a naicializuje objekty v nom
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,9 +83,18 @@ class MainApplication : Fragment() {
         setListeners()
 
         getDateFromCalendarView()
+        loadViewData()
         getUserData()
 
         return binding.root
+    }
+
+    /**
+     * Ulozi data z inputov pre orientation change
+     */
+    override fun onPause() {
+        super.onPause()
+        saveViewData()
     }
 
     /**
@@ -80,8 +103,7 @@ class MainApplication : Fragment() {
     private fun setListeners() {
         binding.buttonAddActivity.setOnClickListener{view : View ->
             // pridanie date do DataHolder triedy
-            getDateFromCalendarView()
-            DataHolder.setDate(date)
+            DataHolder.setDate(getTodayDate())
             onMenuButtonClick()
             view.findNavController().navigate(R.id.action_mainApplication_to_timePickerDialog2)
         }
@@ -100,7 +122,6 @@ class MainApplication : Fragment() {
 
             activityList.clear()
             activitiesRecycleView.adapter?.notifyDataSetChanged()
-
 
             date = (dayOfMonth.toString() + "-" +
                     (month + 1) + "-" + year)
@@ -160,9 +181,6 @@ class MainApplication : Fragment() {
         dbRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                // Resetuje pocet aktivity v dni
-                DataHolder.resetNumberOfActivity()
-
                 // Ideme prechadzat Realtime databazu
                 if(snapshot.exists()) {
 
@@ -175,8 +193,6 @@ class MainApplication : Fragment() {
                         if (activity != null) {
                             activityList.add(activity)
                         }
-
-                        DataHolder.incNumberOfActivity()
                     }
 
                     activitiesRecycleView.adapter = RecycleViewAdapter(activityList)
@@ -193,10 +209,20 @@ class MainApplication : Fragment() {
     }
 
     /**
-     * Metoda nastavi atribut date na datum zo zakliknuteho datumu v calendarViewe
+     * Metoda vrati dnesny den ako string
+     * @return String
+     */
+    private fun getTodayDate() : String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("dd-M-yyyy")
+        return dateFormat.format(calendar.time)
+    }
+
+    /**
+     * Nastavi aktualne zakliknuty date v calendarView do atributu date
      */
     private fun getDateFromCalendarView() {
-        val dateFormat = SimpleDateFormat("dd-M-yyyy")
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
         date = dateFormat.format(Date(binding.CalendarView.date))
     }
 
@@ -209,6 +235,33 @@ class MainApplication : Fragment() {
         val user = myAuthorization.currentUser
         if (user == null) {
             view?.findNavController()?.navigate(R.id.action_mainApplication_to_loginFragment2)
+        }
+    }
+
+    /**
+     * Metoda uklada data do sharedPreferences pre zachovanie v pamati
+     */
+    private fun saveViewData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefMainApp", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("calViewDate", date)
+        editor.apply()
+
+        Log.d("CalednarSaveView", date)
+    }
+
+    /**
+     * Nacitavanie dat zo sharedPreferences
+     */
+    private fun loadViewData() {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefMainApp", Context.MODE_PRIVATE)
+        if (!sharedPreferences.getString("calViewDate", "").equals("")) {
+            val dateSave = sharedPreferences.getString("calViewDate", "")
+            binding.CalendarView.date =
+                SimpleDateFormat("dd-M-yyyy").parse(dateSave).time
+            if (dateSave != null) {
+                date = dateSave
+            }
         }
     }
 

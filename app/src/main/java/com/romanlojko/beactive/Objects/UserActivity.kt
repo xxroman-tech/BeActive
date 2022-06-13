@@ -1,16 +1,16 @@
 package com.romanlojko.beactive.Objects
 
+/**
+ * Trieda predstavuje aktivitu ktora sa vlozi do listu
+ * pri nacitani z DB a nasledne zobrazi v recyclerView
+ * @author Roman Lojko
+ */
 class UserActivity {
 
-    private var date: String = ""
     private var caloriesBurned: String = ""
     private var timeOfActivity: Int = 0
     private var totalSteps: Int = 0
     private var typeOfActivity: String = ""
-
-    fun getDate(): String {
-        return date
-    }
 
     fun getCaloriesBurned(): String {
         return caloriesBurned
@@ -26,10 +26,6 @@ class UserActivity {
 
     fun getTypeOfActivity(): String {
         return typeOfActivity
-    }
-
-    fun setDate(pDate: String) {
-        date = pDate
     }
 
     fun setCaloriesBurned(pCaloriesBurned: String) {

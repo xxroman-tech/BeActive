@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_register.*
 /**
  * Trieda Register fragment ktora dedi od triedy Fragment predstavuje samotne okno registracie
  * noveho uzivatela s jej funkcionalitami
+ * @author Roman Lojko
  */
 class RegisterFragment : Fragment() {
 
@@ -34,6 +35,11 @@ class RegisterFragment : Fragment() {
     private var registrovany = false
     private var nechceSaRegistrovat = false
 
+    /**
+     * Lyfecycle metoda, zavola sa vzdy pri otvoreni fragmentu
+     * a naicializuje objekty v nom
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +65,7 @@ class RegisterFragment : Fragment() {
      */
     override fun onStart() {
         super.onStart()
-        loadLoginInputData()
+        loadRegisterInputData()
     }
 
     /**
@@ -70,7 +76,7 @@ class RegisterFragment : Fragment() {
         if (registrovany || nechceSaRegistrovat)
             deleteData()
         else
-            saveLoginInputData()
+            saveRegisteInputData()
     }
 
     /**
@@ -129,7 +135,7 @@ class RegisterFragment : Fragment() {
     /**
      * Metoda uklada data do sharedPreferences pre zachovanie v pamati
      */
-    private fun saveLoginInputData() {
+    private fun saveRegisteInputData() {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefRegister", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("regName", binding.regNameInput.text.toString())
@@ -143,7 +149,7 @@ class RegisterFragment : Fragment() {
     /**
      * Nacitavanie dat zo sharedPreferences
      */
-    private fun loadLoginInputData() {
+    private fun loadRegisterInputData() {
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPrefRegister", Context.MODE_PRIVATE)
         binding.regNameInput.setText(sharedPreferences.getString("regName", ""))
         binding.regSurnameInput.setText(sharedPreferences.getString("regSurname", ""))

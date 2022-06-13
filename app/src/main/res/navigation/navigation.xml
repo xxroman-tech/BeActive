@@ -35,7 +35,11 @@
         android:id="@+id/activityCounter"
         android:name="com.romanlojko.beactive.activityCounter"
         android:label="fragment_activity_counter"
-        tools:layout="@layout/fragment_activity_counter" />
+        tools:layout="@layout/fragment_activity_counter" >
+        <action
+            android:id="@+id/action_activityCounter_to_mainApplication"
+            app:destination="@id/mainApplication" />
+    </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.romanlojko.beactive.RegisterFragment"
