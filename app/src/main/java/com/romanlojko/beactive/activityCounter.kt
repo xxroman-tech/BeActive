@@ -220,7 +220,7 @@ class activityCounter : Fragment() , SensorEventListener {
         var burnedCalories: String = ""
 //        val stepsToKmConst = 1312.33595801 // Konstata ktoru vypocitam z krokov vzdialenost
 
-        if ((totalSteps - prevTotalSteps) >= 0)
+        if ((totalSteps - prevTotalSteps) > 0)
             burnedCalories = BigDecimal((((Person.getAge() * 0.2017) + (Person.getWeight() * 0.09036) + (getAverageHearthRate() * 0.6309) - 55.0969) * (timerLengthSeconds / 60)) / 4.184).setScale(2, RoundingMode.HALF_DOWN).toString()
 //            burnedCalories = BigDecimal(((8.3 * Person.getWeight() * 3.5) / 200) * (timerLengthSeconds / 60)).setScale(2, RoundingMode.HALF_DOWN).toString()
         else
