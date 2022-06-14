@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_activityCounter_to_mainApplication"
             app:destination="@id/mainApplication" />
+        <action
+            android:id="@+id/action_activityCounter_to_typeOfActivityDialog2"
+            app:destination="@id/typeOfActivityDialog2" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -71,4 +74,12 @@
             android:id="@+id/action_profile_to_mainApplication"
             app:destination="@id/mainApplication" />
     </fragment>
+    <dialog
+        android:id="@+id/typeOfActivityDialog2"
+        android:name="com.romanlojko.beactive.dialogs.TypeOfActivityDialog"
+        android:label="TypeOfActivityDialog" >
+        <action
+            android:id="@+id/action_typeOfActivityDialog2_to_mainApplication"
+            app:destination="@id/mainApplication" />
+    </dialog>
 </navigation>

@@ -1,48 +1,35 @@
 package com.romanlojko.beactive
 
-import android.app.Dialog
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.provider.ContactsContract
-import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.inflate
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
-import androidx.navigation.fragment.NavHostFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 import com.romanlojko.beactive.Objects.DataHolder
-import com.romanlojko.beactive.databinding.ActivityItemBinding.inflate
+import com.romanlojko.beactive.Objects.Person
+import com.romanlojko.beactive.databinding.FragmentActivityCounterBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.typeofactivity_dialog.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * ActivityCounter je trieda ktora dedi Fragment a sensoreventListener
@@ -75,9 +62,8 @@ class activityCounter : Fragment() , SensorEventListener {
     private var prevTotalSteps = 0f
     private var running = false
 
-    // Notofikacie
-    val CHANNEL_ID : String = "channelID"
-    val CHANNEL_NAME : String = "channelName"
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     /**
      * Lifecycle metoda ktora sa zavola pri otvoreni aplikacie alebo pri zmene rotacie
@@ -114,12 +100,17 @@ class activityCounter : Fragment() , SensorEventListener {
         return binding.root
     }
 
+
+
     /**
      * Lifecycle metoda, loadujem data zo sharedpreferences a spusta sensor managera
      * pre detekovanie krokov
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedPreferences = this.activity!!.getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
 
         //nacita stepcounter data zo shared preferences
         lodaData()
@@ -162,17 +153,6 @@ class activityCounter : Fragment() , SensorEventListener {
     }
 
     /**
-     * Lifecycle metoda ktora unregistreListener na stepcount sensor po ukonceni aplikacie
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-
-        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-
-        sensorManager?.unregisterListener(this, stepSensor)
-    }
-
-    /**
      * Inicializacia timeru
      */
     fun initTimer() {
@@ -191,7 +171,10 @@ class activityCounter : Fragment() , SensorEventListener {
      */
     private fun startTimer() {
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
-            override fun onFinish() = onTimerFinished()
+            override fun onFinish() {
+                onTimerFinished()
+                view?.findNavController()?.navigate(R.id.action_activityCounter_to_typeOfActivityDialog2)
+            }
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
@@ -213,9 +196,6 @@ class activityCounter : Fragment() , SensorEventListener {
         updateCountdownUI()
 
         sendDataToFirebase()
-
-        prevTotalSteps = totalSteps
-        saveStepsData()
     }
 
     /**
@@ -225,7 +205,12 @@ class activityCounter : Fragment() , SensorEventListener {
         DataHolder.incNumberOfActivity()
         DataHolder.setTotalSteps((totalSteps - prevTotalSteps).toInt())
         calcTotalBurnedCalories()
-        TypeOfActivityDialog().show(childFragmentManager, TypeOfActivityDialog.TAG)
+
+
+        // ulozenie dat pre dalsie pocitanie krokov
+        prevTotalSteps = totalSteps
+        saveStepsData()
+
     }
 
     /**
@@ -233,9 +218,24 @@ class activityCounter : Fragment() , SensorEventListener {
      */
     private fun calcTotalBurnedCalories() {
         var burnedCalories: String = ""
+//        val stepsToKmConst = 1312.33595801 // Konstata ktoru vypocitam z krokov vzdialenost
 
-        burnedCalories = ((totalSteps - prevTotalSteps) / 20).toString()
+        if ((totalSteps - prevTotalSteps) >= 0)
+            burnedCalories = BigDecimal((((Person.getAge() * 0.2017) + (Person.getWeight() * 0.09036) + (getAverageHearthRate() * 0.6309) - 55.0969) * (timerLengthSeconds / 60)) / 4.184).setScale(2, RoundingMode.HALF_DOWN).toString()
+//            burnedCalories = BigDecimal(((8.3 * Person.getWeight() * 3.5) / 200) * (timerLengthSeconds / 60)).setScale(2, RoundingMode.HALF_DOWN).toString()
+        else
+            burnedCalories = "0"
+//        burnedCalories = ((totalSteps - prevTotalSteps) / 20).toString()
         DataHolder.setCaloriesBurned(burnedCalories)
+    }
+
+    /**
+     * Vrati primernu tep srdca v tepoch za minutu
+     * pre vypocet kalorii, pouzivame priemer pretoze nemame dosah na
+     * meranie tepu
+     */
+    private fun getAverageHearthRate(): Int {
+        return 130
     }
 
     /**
@@ -296,71 +296,6 @@ class activityCounter : Fragment() , SensorEventListener {
     }
 
     /**
-     * Trieda zdedena od DialogFragmentu
-     * Zobrazuje Dialog so vstupnym oknom kam sa zadava typ aktivity pred finalym
-     * ulozenim do firebase DB
-     */
-    class TypeOfActivityDialog: DialogFragment() {
-
-        //Firebase
-        private val myAuthorization: FirebaseAuth = FirebaseAuth.getInstance()
-        private lateinit var dbRef: DatabaseReference
-
-        override fun onCreateDialog(@Nullable savedInstanceState: Bundle?) : Dialog {
-            return (activity?.let{
-                val builder = AlertDialog.Builder(it)
-                val input = EditText(activity)
-
-                input.setHint(R.string.choose_activity_hint_typ)
-                input.inputType = InputType.TYPE_CLASS_TEXT
-                builder.setView(input)
-
-                builder.setTitle("Super výkon!")
-                    .setPositiveButton(R.string.answerSave,
-                        DialogInterface.OnClickListener { dialog, id ->
-                            DataHolder.setTypeOfActivity(input.text.toString())
-                            pushToFirebase()
-                            activity?.onBackPressed()
-                        })
-                // Create the AlertDialog object and return it
-                builder.create()
-            } ?: throw IllegalStateException("Activity cannot be null"))
-        }
-
-        /**
-         * Metoda kotra pushne novu aktivitu do firebase
-         */
-        private fun pushToFirebase() {
-
-            dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}")
-
-            // Zistim pocet potomkov aby som vedel kam vkladat
-            dbRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    DataHolder.setNumberOfActivity(snapshot.childrenCount)
-                }
-
-                override fun onCancelled(error: DatabaseError) { }
-            })
-
-            dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}" + "/${DataHolder.getNumberOfActivity()}")
-
-            var list: HashMap<String, Any> = HashMap()
-
-            list.put("caloriesBurned", DataHolder.getCaloriesBurned())
-            list.put("timeOfActivity", DataHolder.getTimeOfActivity())
-            list.put("totalSteps", DataHolder.getTotalSteps())
-            list.put("typeOfActivity", DataHolder.getTypeOfActivity())
-
-            dbRef.updateChildren(list as Map<String, Any>)
-        }
-
-        companion object {
-            const val TAG = "TypeOfActivityDialog"
-        }
-    }
-
-    /**
      * Metoda ulozi data do Bundle pred ukoncenim alebo ototcenim displeja
      * alebo ukoncenim, minimalizovanim aplikacie
      * @param outState
@@ -415,8 +350,6 @@ class activityCounter : Fragment() , SensorEventListener {
      * Metoda uklada data do sharedPreferences pre zachovanie v pamati
      */
     private fun saveStepsData() {
-        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
         editor.putFloat("prevTotalSteps", prevTotalSteps)
         editor.apply()
     }
@@ -425,7 +358,6 @@ class activityCounter : Fragment() , SensorEventListener {
      * Nacitavanie dat zo sharedPreferences
      */
     private fun lodaData() {
-        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val savedNumber = sharedPreferences.getFloat("prevTotalSteps", 0f)
         Log.d("StepCounterData", "$savedNumber")
         prevTotalSteps = savedNumber

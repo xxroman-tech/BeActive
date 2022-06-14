@@ -32,7 +32,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="64dp"
                     android:text=""
-                    android:textSize="70sp" />
+                    android:textSize="60sp" />
 
                 <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                     android:id="@+id/progress_casovac"
