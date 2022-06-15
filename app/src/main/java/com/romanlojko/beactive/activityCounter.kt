@@ -155,7 +155,7 @@ class activityCounter : Fragment() , SensorEventListener {
     /**
      * Inicializacia timeru
      */
-    fun initTimer() {
+    private fun initTimer() {
         setNewTimerLength()
         secondsRemaining = timerLengthSeconds
         updateButtons()
