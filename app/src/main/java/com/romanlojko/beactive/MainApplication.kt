@@ -176,7 +176,8 @@ class MainApplication : Fragment() {
      */
     private fun getUserData() {
 
-        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/$date")
+        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("/activityData/" + myAuthorization.currentUser?.uid + "/$date")
 
         dbRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {

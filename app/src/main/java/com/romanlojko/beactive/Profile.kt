@@ -173,7 +173,8 @@ class Profile : Fragment() {
         val myAuthorization: FirebaseAuth = FirebaseAuth.getInstance()
 
 
-        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/personData/" + myAuthorization.currentUser?.uid + "/data")
+        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("/personData/" + myAuthorization.currentUser?.uid + "/data")
 
         dbRef.setValue(Person).addOnCompleteListener { task ->
             if (task.isComplete) {

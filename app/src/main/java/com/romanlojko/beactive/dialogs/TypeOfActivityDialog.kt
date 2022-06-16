@@ -58,7 +58,8 @@ class TypeOfActivityDialog: DialogFragment() {
      */
     private fun pushToFirebase() {
 
-        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}")
+        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}")
 
         // Zistim pocet potomkov aby som vedel kam vkladat
         dbRef.addValueEventListener(object : ValueEventListener {
@@ -69,7 +70,9 @@ class TypeOfActivityDialog: DialogFragment() {
             override fun onCancelled(error: DatabaseError) { }
         })
 
-        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app").getReference("/activityData/" + myAuthorization.currentUser?.uid + "/${DataHolder.getDate()}" + "/${DataHolder.getNumberOfActivity()}")
+        dbRef = FirebaseDatabase.getInstance("https://vamzapp-5939a-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("/activityData/" + myAuthorization.currentUser?.uid
+                    + "/${DataHolder.getDate()}" + "/${DataHolder.getNumberOfActivity()}")
 
         var list: HashMap<String, Any> = HashMap()
 
@@ -81,3 +84,4 @@ class TypeOfActivityDialog: DialogFragment() {
         dbRef.updateChildren(list as Map<String, Any>)
     }
 }
+
